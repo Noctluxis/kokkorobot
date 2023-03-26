@@ -1,0 +1,36 @@
+import asyncio
+from nonebot.plugin import on_command
+import kokkoro
+from kokkoro import Bot
+from kokkoro.typing import CQEvent, T_State
+
+
+broadcast = on_command('broadcast', aliases={'bc', '广播'})
+
+
+@broadcast.handle()
+async def bc_rec(bot: Bot, event: CQEvent, state: T_State):
+    if event.user_id not in kokkoro.configs.SUPERUSERS:
+        await broadcast.finish('Insufficient authority.')
+    msg = event.get_message()
+    if msg:
+        state['msg'] = msg
+
+
+@broadcast.got('msg', prompt='请发送需要广播的内容')
+async def bc(bot: Bot, event: CQEvent, state: T_State):
+    msg = state['msg']
+    gl = await bot.get_group_list()
+    gl = [g['group_id'] for g in gl ]
+    for g in gl:
+        await asyncio.sleep(0.5)
+        try:
+            await bot.send_group_msg(group_id=g, message=msg)
+            kokkoro.logger.info(f'群{g} 投递广播成功')
+        except Exception as e:
+            kokkoro.logger.error(f'群{g} 投递广播失败：{type(e)}')
+            try:
+                await bot.send(event, f'群{g} 投递广播失败：{type(e)}')
+            except Exception as e:
+                kokkoro.logger.error(f'向广播发起者进行错误回报时发生错误：{type(e)}')
+    await bot.send(event, '广播完成！')
