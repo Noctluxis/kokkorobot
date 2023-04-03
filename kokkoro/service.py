@@ -489,7 +489,7 @@ class matcher_wrapper:
 
     def __str__(self) -> str:
         finfo = [f"{k}={v}" for k, v in self.info.items()]
-        return (f"<Matcher from Sevice {self.sv.name}, priority={self.priority}, type={self.type}, "
+        return (f"<Matcher from Service {self.sv.name}, priority={self.priority}, type={self.type}, "
                 + ", ".join(finfo)+">")
 
     def __repr__(self) -> str:
