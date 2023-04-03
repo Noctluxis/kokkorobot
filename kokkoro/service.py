@@ -295,11 +295,11 @@ class Service:
 
     def on_keyword(self, keywords: Iterable, normal: bool = True, only_to_me: bool = False, only_group: bool = True, **kwargs) -> "matcher_wrapper":
         if isinstance(keywords, str):
-            keywords = set([keywords])
+            keywords = {keywords}
         elif not isinstance(keywords, set):
             if keywords:
-                keywords = set([keywords]) if len(
-                    keywords) == 1 and isinstance(keywords, tuple) else set(keywords)
+                keywords = {keywords} if len(
+                    {keywords}) == 1 and isinstance(keywords, tuple) else set(keywords)
             else:
                 keywords = set()
         rule = self.check_service(only_to_me, only_group)
@@ -325,10 +325,10 @@ class Service:
 
     def on_shell_command(self, name: str, only_to_me: bool = False, aliases: Optional[Iterable] = None, parser: Optional[ArgumentParser] = None, only_group: bool = True, **kwargs) -> "matcher_wrapper":
         if isinstance(aliases, str):
-            aliases = set([aliases])
+            aliases = {aliases}
         elif not isinstance(aliases, set):
             if aliases:
-                aliases = set([aliases]) if len(aliases) == 1 and isinstance(
+                aliases = {aliases} if len({aliases}) == 1 and isinstance(
                     aliases, tuple) else set(aliases)
             else:
                 aliases = set()
